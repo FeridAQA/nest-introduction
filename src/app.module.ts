@@ -6,13 +6,17 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import * as entities from './entities';
 import { UserModule } from "./user/user.module";
+import { AuthModule } from "./auth/auth.module";
 
 
 @Module({
   imports: [
     // user module
      UserModule,
-     
+
+    // auth module
+    AuthModule,
+
     // env consifg
     ConfigModule.forRoot(),
 
