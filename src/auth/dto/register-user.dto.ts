@@ -1,18 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEmail, Min, MinLength } from "class-validator";
+import { LoginUserDto } from "./login-user.dto";
 
-export class RegisterUserDto {
-    @Type()
-    @IsEmail()
-    @ApiProperty({ description: "User email" , default: "Jonedoe@gmail.com"})
-    email: string;
-
-    @Type()
-    @MinLength(6)
-    @ApiProperty({ description: "User password", default: "123456" })
-    password: string;
-
+export class RegisterUserDto extends LoginUserDto {
     @Type()
     @MinLength(1)
     @ApiProperty({ description: "User first name" ,default: "John"})

@@ -1,11 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { BaseEntity } from "./Base.entity";
+import { BeforeInsert, Column, Entity } from "typeorm";
+import { CommonEntity } from "./Common.entity";
+
+import * as bcrypt from "bcrypt";
+
 
 export type UserType = keyof User;
 
 
 @Entity()
-export class User extends BaseEntity {
+export class User extends CommonEntity {
     @Column()
     email: string;
 
@@ -17,6 +20,14 @@ export class User extends BaseEntity {
 
     @Column()
     lastName: string;
+
+
+    @BeforeInsert()
+    async beforeInsert() {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+ 
+
 }
 
  
