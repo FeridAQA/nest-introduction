@@ -1,0 +1,21 @@
+import { InjectRepository } from "@nestjs/typeorm";
+import { User, UserType } from "src/entities";
+import { Repository } from "typeorm";
+
+
+export class UserService {
+
+    constructor(
+        @InjectRepository(User)
+        private  userRepo:  Repository<User>,
+    ){}
+
+    find(where?: Partial<User>,select?: UserType[]){
+        return this.userRepo.find({where,select});
+    }
+
+    findOne(where: Partial<User>,select?: UserType[]){
+        return this.userRepo.findOne({where,select});
+    }
+
+}

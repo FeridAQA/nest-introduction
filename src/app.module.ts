@@ -4,8 +4,15 @@ import { AppService } from "./app.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import * as entities from './entities';
+import { UserModule } from "./user/user.module";
+
+
 @Module({
   imports: [
+    // user module
+     UserModule,
+     
     // env consifg
     ConfigModule.forRoot(),
 
@@ -20,7 +27,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [],
+        entities,
         synchronize: true,
         logging: true,
       }),
