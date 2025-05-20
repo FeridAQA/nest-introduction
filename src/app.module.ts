@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
+import { ProfilModule } from './profil/profil.module';
 import config from "./config/config";
 
 
@@ -32,7 +33,9 @@ import config from "./config/config";
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
         logging: true,
-      })
+      }),
+
+    ProfilModule
 
   ],
   controllers: [AppController],
