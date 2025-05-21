@@ -16,7 +16,7 @@ export class AuthService {
 
     async login(body: LoginUserDto) {
         let user = await this.userService.findOne({ email: body.email },
-            ["password", "id", "firstName"]
+            ["password", "id",]
         );
         if (!user) {
             throw new NotFoundException("login or password is incorrect");
