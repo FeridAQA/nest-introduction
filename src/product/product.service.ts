@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/entities/Product.entity';
-import { In, Repository } from 'typeorm';
+import { And, Between, ILike, In, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { FindProductParams } from './product.types';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -15,17 +15,55 @@ export class ProductService {
         private productRepo: Repository<Product>,
     ) { }
 
-    async find({ where, select }: FindProductParams = {}) {
-        return this.productRepo.find({ where, select, relations: ['categories'] });
+    async find({ where, select, relations, filter, pagination }: FindProductParams = {}) {
+
+        where = where || {};
+        if (filter) {
+            if (filter.name) {
+                where.name = ILike(`%${filter.name}%`);
+            }
+            if (filter.price) {
+                const [min, max] = filter.price;
+                let priceCondition = [];
+
+                if (min > 0) {
+                    priceCondition.push(MoreThanOrEqual(min));
+                }
+                if (max > 0) {
+                    priceCondition.push(LessThanOrEqual(max));
+                }
+                if (priceCondition.length) {
+                    where.price = And(...priceCondition);
+                }
+
+            }
+            if (filter.categories) {
+                where.categories = filter.categories.map(id => ({ id }));
+            }
+        }
+
+        return this.productRepo.find(
+            {
+                where,
+                select,
+                relations,
+                take: pagination?.limit || 10,
+                skip: pagination && (pagination.page) * (pagination.limit ) ,
+                order: {
+                    createdAt: 'DESC', // Default ordering by id
+                }
+            }
+        );
     }
-    async findOne({ where, select }: FindProductParams = {}) {
-        return this.productRepo.findOne({ where, select, relations: ['categories'] });
+    async findOne({ where, select, relations }: FindProductParams = {}) {
+        return this.productRepo.findOne({ where, select, relations });
     }
 
 
 
     async create(params: CreateProductDto) {
-        let product = this.productRepo.create(params);
+        let categories = await this.categoryService.findByIds(params.categories);
+        let product = this.productRepo.create({ ...params, categories });
         await product.save();
         return product;
     }

@@ -4,5 +4,17 @@ import { FindOptionsWhere } from "typeorm";
 export interface FindProductParams {
     where?: FindOptionsWhere<Product>,
     select?: Array<ProductKey>,
-    // relations?: Array<string>,
+    relations?: Array<string>,
+    filter?: {
+        name?: string,
+        price?: [
+            number,
+            number
+        ],
+        categories?: number[]
+    }
+    pagination?: {
+        limit?: number,
+        page?: number,
+    }
 }

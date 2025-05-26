@@ -27,5 +27,10 @@ export class CreateProductDto {
     @IsUrl()
     image: string;
 
+    @Type(() => Number)
+    @ApiProperty({default: [1],type: Number ,isArray: true})
+    @IsNumber({}, { each: true })
+    @IsOptional()
+    categories:number[]
 
 }

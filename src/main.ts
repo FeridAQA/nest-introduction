@@ -7,11 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // validation 
    app.useGlobalPipes(
-    // new ValidationPipe({
-    //   whitelist: true, // bilinməyən field-ləri atır
-    //   forbidNonWhitelisted: true, // əlavə field-lərə icazə vermir
-    //   transform: true, // tipi avtomatik çevirməyə çalışır
-    // }),
+    new ValidationPipe({
+      whitelist: true, // bilinməyən field-ləri atır
+      forbidNonWhitelisted: true, // əlavə field-lərə icazə vermir
+      transform: true, // tipi avtomatik çevirməyə çalışır
+    }),
   );
   
   const config = new DocumentBuilder()
